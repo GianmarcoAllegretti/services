@@ -1,33 +1,42 @@
 <?php
-//These are the defined authentication environment in the db service
+    require_once("Config/Config.php")
 
-// The MySQL service named in the docker-compose.yml.
-$host = 'db';
+    $url = !empty($_GET['url']) ? $_GET['url']: 'home/home';
+    $arrUrl = explode('/',  $url);
+    $controller = $arrUrl[0];
+    $method = $arrUrl[0];
+    $params = '';
 
-// Database use name
-$user = 'root';
-
-//database user password
-$pass = 'MYSQL_ROOT_PASSWORD';
-
-// database name
-$mydatabase = 'services';
-// check the mysql connection status
-
-$conn = new mysqli($host, $user, $pass, $mydatabase);
-
-// select query
-$sql = 'SELECT * FROM users';
-
-if ($result = $conn->query($sql)) {
-    while ($data = $result->fetch_object()) {
-        $users[] = $data;
+    if(!empty($arrUrl[1]))
+    {
+        if ($arrUrl[1] != '') {
+            $method = $arrUrl[1];
+        }
     }
-}
 
-foreach ($users as $user) {
+    if(!empty($arrUrl[2]))
+    {
+        if($arrUrl[2] != '')
+        {
+            for ($i=2; $i < count($arrUrl); $i++) { 
+                $params .= $arrUrl[$i].',';
+            }
+            $params = trim($params, ',');
+        }
+    }
+
+    spl_autoload_register(function($class){
+        // echo LIBS.'Core/'.$class.'.php';
+        if(file_exists(LIBS.'Core/'.$class.'.php'))
+        {
+            require_once(LIBS.'Core/'.$class.'.php')
+        }
+    });
+
+    echo "controller " . $controller;
     echo "<br>";
-    echo $user->username . " " . $user->password;
+    echo "method " .  $method;
     echo "<br>";
-}
+    echo "params " .  $params;
+
 ?>
