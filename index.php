@@ -1,5 +1,5 @@
 <?php
-    require_once("Config/Config.php")
+    require_once("Config/Config.php");
 
     $url = !empty($_GET['url']) ? $_GET['url']: 'home/home';
     $arrUrl = explode('/',  $url);
@@ -29,14 +29,26 @@
         // echo LIBS.'Core/'.$class.'.php';
         if(file_exists(LIBS.'Core/'.$class.'.php'))
         {
-            require_once(LIBS.'Core/'.$class.'.php')
+            require_once(LIBS.'Core/'.$class.'.php');
         }
     });
 
-    echo "controller " . $controller;
-    echo "<br>";
-    echo "method " .  $method;
-    echo "<br>";
-    echo "params " .  $params;
+    // Load
+    $controllerFile = 'Controllers/'.$controller.'.php';
+    if(file_exists($controllerFile))
+    {
+        require_once($controllerFile);
+        $controller = new $controller();
+        if(method_exists($controller, $method))
+        {
+            $controller->{$method}($params);
+        }else
+        {
+            echo "no existe el metodo";
+        }
+    }else
+    {
+        echo "no existe el controlador <br>";
+    }
 
 ?>
