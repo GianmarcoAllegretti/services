@@ -1,13 +1,14 @@
 <?php 
 
 	/**
-	 * 
+	 * Base de todos los controllers, carga los modelos
 	 */
 	class Controllers
 	{
 		
 		public function __construct()
 		{
+			$this->views = new Views();
 			$this->loadModel();
 		}
 
@@ -22,5 +23,3 @@
 			}
 		}
 	}
-
-?>
